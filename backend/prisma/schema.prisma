@@ -9,3 +9,55 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  username     String   @id @db.VarChar(100)
+  password     String   @db.VarChar(100)
+  token        String?  @db.VarChar(100)
+
+  @@map("users")
+}
+
+model Category {
+  category_id  Int      @id @default(autoincrement())
+  type         Type
+  menu         Menu[]
+
+  @@map("categories")
+}
+
+model Menu {
+  menu_id      Int      @id @default(autoincrement())
+  name         String   @db.VarChar(255) @unique
+  price        Int      @db.Int
+  description  String   @db.VarChar(255)
+
+  category     Category @relation(fields: [category_id], references: [category_id])
+
+  category_id  Int
+
+  @@map("menus")
+}
+
+// model Order {
+//   order_id     Int      @id @default(autoincrement())
+//   datetime     DateTime
+//   quantity     Int 
+//   total_price  Int
+//   status       Status
+
+//   @@map("orders")
+// }
+
+enum Type {
+  food
+  drink
+  snack
+  package
+}
+
+// enum Status {
+//   waiting
+//   process
+//   complete
+// }
